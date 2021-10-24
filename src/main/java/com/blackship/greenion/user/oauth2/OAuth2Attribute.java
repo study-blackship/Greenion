@@ -27,7 +27,7 @@ public class OAuth2Attribute {
         Map<String, Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile");
 
         return OAuth2Attribute.builder()
-                .email((String) attributes.get("email"))
+                .email((String) kakaoAccount.get("email"))
                 .attributeKey(email)
                 .build();
     }

@@ -9,7 +9,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class SignApiTest {
 
@@ -27,22 +27,49 @@ class SignApiTest {
     }
 
     @Test
-    void signUp_isOk() throws Exception {
-        mockMvc.perform(post("/signUp")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{}"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
     void signUp_callsSignUpInSignService() throws Exception {
         SignUser givenSignUser = new SignUser("email@email.com");
 
         mockMvc.perform(post("/signUp")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(givenSignUser)))
-                .andExpect(status().isOk());
+                        .content(objectMapper.writeValueAsString(givenSignUser)));
 
         assertThat(signService.signUp_argumentSignUser).isEqualTo(givenSignUser);
+    }
+
+    @Test
+    void signUp_returnsSuccessSignUpResponse() throws Exception {
+        SignUser givenSignUser = new SignUser("email@email.com");
+
+        signService.signUp_returnValue = true;
+
+        SignUpResponse expectedSignUpResponse = SignUpResponse.of(
+                true,
+                givenSignUser.getEmail());
+
+        mockMvc.perform(post("/signUp")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(givenSignUser)))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedSignUpResponse)));
+    }
+
+    @Test
+    void signUp_returnsFailSignUpResponse() throws Exception {
+        SignUser givenSignUser = new SignUser("email@email.com");
+
+        signService.signUp_returnValue = false;
+
+        SignUpResponse expectedSignUpResponse = SignUpResponse.of(
+                false,
+                givenSignUser.getEmail());
+
+        mockMvc.perform(post("/signUp")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(givenSignUser)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedSignUpResponse)));
     }
 }

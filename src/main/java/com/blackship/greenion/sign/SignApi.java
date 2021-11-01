@@ -1,4 +1,4 @@
-package com.blackship.greenion.user.sign;
+package com.blackship.greenion.sign;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

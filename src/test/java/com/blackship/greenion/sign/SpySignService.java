@@ -1,4 +1,4 @@
-package com.blackship.greenion.user.sign;
+package com.blackship.greenion.sign;
 
 public class SpySignService implements SignService {
     public SignUser signUp_argumentSignUser;

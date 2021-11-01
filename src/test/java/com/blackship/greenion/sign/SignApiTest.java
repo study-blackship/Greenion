@@ -1,4 +1,4 @@
-package com.blackship.greenion.user.sign;
+package com.blackship.greenion.sign;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
